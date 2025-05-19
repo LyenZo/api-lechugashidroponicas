@@ -4,6 +4,75 @@ const router = express.Router();
 const connection = require('./db');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//APP_E_U
+// GET
+router.get('/app_e_u', (req, res) => {
+  connection.query('SELECT * FROM app_e_u', (err, results) => {
+    if (err) {
+      console.error('Error al obtener registros:', err);
+      res.status(500).json({ error: 'Error al obtener registros' });
+      return;
+    }
+    res.json(results);
+  });
+});
+// GET ONE
+router.get('/app_e_u/:id_u', (req, res) => {
+    const id_u = req.params.id_u;
+    connection.query('SELECT * FROM app_e_u WHERE id_u = ?', id_u, (err, results) => {
+      if (err) {
+        console.error('Error al obtener el registro:', err);
+        res.status(500).json({ error: 'Error al obtener el registro' });
+        return;
+      }
+      if (results.length === 0) {
+        res.status(404).json({ error: 'Registro no encontrado' });
+        return;
+      }
+      res.json(results[0]);
+    });
+});
+// CREATE
+router.post('/app_e_u', (req, res) => {
+  const nuevoRegistro = req.body;
+  connection.query('INSERT INTO app_e_u SET ?', nuevoRegistro, (err, results) => {
+    if (err) {
+      console.error('Error al crear un nuevo registro:', err);
+      res.status(500).json({ error: 'Error al crear un nuevo registro' });
+      return;
+    }
+    res.status(201).json({ message: 'Registro creado exitosamente' });
+  });
+});
+// UPDATE
+router.put('/app_e_u/:id_u', (req, res) => {
+  const id_u = req.params.id_u;
+  const datosActualizados = req.body;
+  connection.query('UPDATE app_e_u SET ? WHERE id_u = ?', [datosActualizados, id_u], (err, results) => {
+    if (err) {
+      console.error('Error al actualizar el registro:', err);
+      res.status(500).json({ error: 'Error al actualizar el registro' });
+      return;
+    }
+    res.json({ message: 'Registro actualizado exitosamente' });
+  });
+});
+// DELETE
+router.delete('/app_e_u/:id_u', (req, res) => {
+  const id_u = req.params.id_u;
+  connection.query('DELETE FROM app_e_u WHERE id_u = ?', id_u, (err, results) => {
+    if (err) {
+      console.error('Error al eliminar el registro:', err);
+      res.status(500).json({ error: 'Error al eliminar el registro' });
+      return;
+    }
+    res.json({ message: 'Registro eliminado exitosamente' });
+  });
+});
+module.exports = router;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //APP_PR_U
 // GET
 router.get('/app_pr_u', (req, res) => {
